@@ -10,7 +10,7 @@ package bdd;
  * @author dhaene
  */
 public class Parametres {
-    public static String LIEN = "jdbc:mysql://192.168.163.15:3306/idologis_laravel";
+    public static String LIEN = "jdbc:mysql://192.168.1.15:3306/idologis_laravel";
     public static String UTILISATEUR = "root";
     public static String PASSWORD = "";
 }

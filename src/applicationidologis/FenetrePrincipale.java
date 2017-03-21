@@ -45,6 +45,7 @@ public class FenetrePrincipale extends javax.swing.JFrame {
         ArrayList<Classe> liste = service.listeClasse();
         for(int i=0;i<liste.size();i++){
             cmb_classe.addItem(liste.get(i));
+            v_cmb_classe.addItem(liste.get(i));
         }
     }
     
@@ -53,6 +54,7 @@ public class FenetrePrincipale extends javax.swing.JFrame {
         ArrayList<Utilisateur> liste = service.listeUtilisateur();
         for(int i=0;i<liste.size();i++){
             cmb_utilisateur.addItem(liste.get(i));
+            v_cmb_vendeur.addItem(liste.get(i));
         }
     }
     
@@ -104,8 +106,7 @@ public class FenetrePrincipale extends javax.swing.JFrame {
         v_chambres.setValue(rs.getInt(6));
         v_pieces.setValue(rs.getInt(7));
         v_prix.setText(rs.getString(9));
-        v_vendeur.setValue(rs.getInt(10));
-        v_classe.setValue(rs.getInt(11));
+
 
     }
     
@@ -156,10 +157,10 @@ public class FenetrePrincipale extends javax.swing.JFrame {
         v_btn_modif = new javax.swing.JButton();
         v_type = new javax.swing.JTextField();
         jLabel22 = new javax.swing.JLabel();
-        v_vendeur = new javax.swing.JSpinner();
-        v_classe = new javax.swing.JSpinner();
         v_pieces = new javax.swing.JSpinner();
         v_chambres = new javax.swing.JSpinner();
+        v_cmb_vendeur = new javax.swing.JComboBox();
+        v_cmb_classe = new javax.swing.JComboBox();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
@@ -184,8 +185,8 @@ public class FenetrePrincipale extends javax.swing.JFrame {
         l_type = new javax.swing.JTextField();
         l_chambres = new javax.swing.JSpinner();
         l_pieces = new javax.swing.JSpinner();
-        cmb_classe = new javax.swing.JComboBox<>();
-        cmb_utilisateur = new javax.swing.JComboBox<>();
+        cmb_classe = new javax.swing.JComboBox<Object>();
+        cmb_utilisateur = new javax.swing.JComboBox<Object>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -285,10 +286,10 @@ public class FenetrePrincipale extends javax.swing.JFrame {
                     .addComponent(v_surface, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
                     .addComponent(v_secteur, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
                     .addComponent(v_type, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
-                    .addComponent(v_vendeur)
-                    .addComponent(v_classe)
                     .addComponent(v_pieces, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(v_chambres))
+                    .addComponent(v_chambres)
+                    .addComponent(v_cmb_vendeur, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(v_cmb_classe, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 828, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23))
@@ -321,7 +322,7 @@ public class FenetrePrincipale extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(v_type, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -345,12 +346,12 @@ public class FenetrePrincipale extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel9)
-                            .addComponent(v_vendeur, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(v_cmb_vendeur, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel10)
-                            .addComponent(v_classe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(78, 78, 78))
+                            .addComponent(v_cmb_classe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(79, 79, 79))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
@@ -583,8 +584,12 @@ public class FenetrePrincipale extends javax.swing.JFrame {
     private void v_btn_ajoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_v_btn_ajoutActionPerformed
 
         String[] colonnes= {"secteur", "types", "surface", "surfaceTerrain", "chambres", "pieces", "prix", "user_id","categorie_id","classe_id"};
+        Classe classe = (Classe) v_cmb_classe.getSelectedItem();
+        int classe_id = classe.getId();
+        Utilisateur utilisateur = (Utilisateur) v_cmb_vendeur.getSelectedItem();
+        int utilisateur_id = utilisateur.getId();
         Object[] contenu={v_secteur.getText(),v_type.getText(), v_surface.getText(),v_surfTerrain.getText(),(int) v_chambres.getValue()
-                ,(int) v_pieces.getValue(),v_prix.getText(),(int) v_vendeur.getValue(),1,(int) v_classe.getValue()};
+                ,(int) v_pieces.getValue(),v_prix.getText(),utilisateur_id,1,classe_id};
         System.out.println(bdd.insert("biens", colonnes, contenu));
         tblVentes.setModel(afficher("ventes"));
     }//GEN-LAST:event_v_btn_ajoutActionPerformed
@@ -616,8 +621,12 @@ public class FenetrePrincipale extends javax.swing.JFrame {
     private void v_btn_modifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_v_btn_modifActionPerformed
         String id = String.valueOf(tblVentes.getValueAt(tblVentes.getSelectedRow(), 0));
         String[] colonnes= {"secteur", "types", "surface", "surfaceTerrain", "chambres", "pieces", "prix", "user_id","categorie_id","classe_id"};
+        Classe classe = (Classe) v_cmb_classe.getSelectedItem();
+        int classe_id = classe.getId();
+        Utilisateur utilisateur = (Utilisateur) v_cmb_vendeur.getSelectedItem();
+        int utilisateur_id = utilisateur.getId();
         Object[] contenu={v_secteur.getText(),v_type.getText(), v_surface.getText(),v_surfTerrain.getText(),(int) v_chambres.getValue()
-                ,(int) v_pieces.getValue(),v_prix.getText(),(int) v_vendeur.getValue(),1,(int) v_classe.getValue()};
+                ,(int) v_pieces.getValue(),v_prix.getText(),utilisateur_id,1,classe_id};
         System.out.println(bdd.updateBien("biens", colonnes, contenu, "id="+id));
         tblVentes.setModel(afficher("ventes"));
     }//GEN-LAST:event_v_btn_modifActionPerformed
@@ -721,13 +730,13 @@ public class FenetrePrincipale extends javax.swing.JFrame {
     private javax.swing.JButton v_btn_modif;
     private javax.swing.JButton v_btn_suppr;
     private javax.swing.JSpinner v_chambres;
-    private javax.swing.JSpinner v_classe;
+    private javax.swing.JComboBox v_cmb_classe;
+    private javax.swing.JComboBox v_cmb_vendeur;
     private javax.swing.JSpinner v_pieces;
     private javax.swing.JTextField v_prix;
     private javax.swing.JTextField v_secteur;
     private javax.swing.JTextField v_surfTerrain;
     private javax.swing.JTextField v_surface;
     private javax.swing.JTextField v_type;
-    private javax.swing.JSpinner v_vendeur;
     // End of variables declaration//GEN-END:variables
 }
