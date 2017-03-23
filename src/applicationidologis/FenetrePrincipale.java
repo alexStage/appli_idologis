@@ -35,6 +35,7 @@ public class FenetrePrincipale extends javax.swing.JFrame {
 
         tblVentes.setModel(afficher("ventes"));
         tblLocations.setModel(afficher("locations"));
+        table_vendeur.setModel(afficher("vendeur"));
         comboClasse();
         comboVendeur();
         
@@ -60,14 +61,6 @@ public class FenetrePrincipale extends javax.swing.JFrame {
     
     private DefaultTableModel afficher(String pCategorie){
         DefaultTableModel model=new DefaultTableModel();
-        model.addColumn("id");
-        model.addColumn("secteur");
-        model.addColumn("type");
-        model.addColumn("surface");
-        model.addColumn("surfaceTerrain");
-        model.addColumn("chambres");
-        model.addColumn("pieces");
-        model.addColumn("prix");
         
         try{
 
@@ -75,17 +68,65 @@ public class FenetrePrincipale extends javax.swing.JFrame {
             stm=con.createStatement();
             switch (pCategorie) {
                 case "ventes":
+                    model.addColumn("id");
+                    model.addColumn("secteur");
+                    model.addColumn("type");
+                    model.addColumn("surface");
+                    model.addColumn("surfaceTerrain");
+                    model.addColumn("chambres");
+                    model.addColumn("pieces");
+                    model.addColumn("prix");
                     rs=stm.executeQuery("Select * from biens where categorie_id = 1");
+                    while(rs.next()){
+                        model.addRow(new Object[]{rs.getString("id"),rs.getString("secteur"),rs.getString("types"),
+                        rs.getString("surface"),rs.getString("surfaceTerrain"),rs.getString("chambres"),rs.getString("pieces"),rs.getString("prix")});
+                    }
                     break;
                 case "locations":
+                    model.addColumn("id");
+                    model.addColumn("secteur");
+                    model.addColumn("type");
+                    model.addColumn("surface");
+                    model.addColumn("surfaceTerrain");
+                    model.addColumn("chambres");
+                    model.addColumn("pieces");
+                    model.addColumn("prix");
                     rs=stm.executeQuery("Select * from biens where categorie_id = 2");
+                    while(rs.next()){
+                        model.addRow(new Object[]{rs.getString("id"),rs.getString("secteur"),rs.getString("types"),
+                        rs.getString("surface"),rs.getString("surfaceTerrain"),rs.getString("chambres"),rs.getString("pieces"),rs.getString("prix")});
+                    }
+                    break;
+                case "vendeur":
+                    model.addColumn("id");
+                    model.addColumn("nom");
+                    model.addColumn("prenom");
+                    model.addColumn("email");
+                    rs=stm.executeQuery("Select id, name, prenom, email from users");
+                    while(rs.next()){
+                        model.addRow(new Object[]{rs.getString("id"),rs.getString("name"),rs.getString("prenom"),
+                        rs.getString("email")});
+                    }
+                    break;
+                case "biens":
+                    String id = String.valueOf(table_vendeur.getValueAt(table_vendeur.getSelectedRow(), 0));
+                    model.addColumn("id");
+                    model.addColumn("secteur");
+                    model.addColumn("type");
+                    model.addColumn("surface");
+                    model.addColumn("surfaceTerrain");
+                    model.addColumn("chambres");
+                    model.addColumn("pieces");
+                    model.addColumn("prix");
+                    rs=stm.executeQuery("Select * from biens where categorie_id = "+id);
+                    while(rs.next()){
+                        model.addRow(new Object[]{rs.getString("id"),rs.getString("secteur"),rs.getString("types"),
+                        rs.getString("surface"),rs.getString("surfaceTerrain"),rs.getString("chambres"),rs.getString("pieces"),rs.getString("prix")});
+                    }
                     break;
             }
             
-            while(rs.next()){
-                model.addRow(new Object[]{rs.getString("id"),rs.getString("secteur"),rs.getString("types"),
-                rs.getString("surface"),rs.getString("surfaceTerrain"),rs.getString("chambres"),rs.getString("pieces"),rs.getString("prix")});
-            }
+
         }
         catch(Exception e)
         {
@@ -185,8 +226,15 @@ public class FenetrePrincipale extends javax.swing.JFrame {
         l_type = new javax.swing.JTextField();
         l_chambres = new javax.swing.JSpinner();
         l_pieces = new javax.swing.JSpinner();
-        cmb_classe = new javax.swing.JComboBox<Object>();
-        cmb_utilisateur = new javax.swing.JComboBox<Object>();
+        cmb_classe = new javax.swing.JComboBox<>();
+        cmb_utilisateur = new javax.swing.JComboBox<>();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        table_vendeur = new javax.swing.JTable();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        table_biens = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -318,11 +366,11 @@ public class FenetrePrincipale extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
                             .addComponent(v_secteur, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(v_type, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -542,10 +590,77 @@ public class FenetrePrincipale extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 4, Short.MAX_VALUE))
+                .addGap(0, 5, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("locations", jPanel2);
+
+        table_vendeur.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        table_vendeur.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                table_vendeurMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(table_vendeur);
+
+        table_biens.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane4.setViewportView(table_biens);
+
+        jLabel2.setFont(new java.awt.Font("Noto Sans", 0, 18)); // NOI18N
+        jLabel2.setText("liste des vendeurs");
+
+        jLabel11.setFont(new java.awt.Font("Noto Sans", 0, 18)); // NOI18N
+        jLabel11.setText("biens à charge:");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(600, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel11)
+                    .addComponent(jLabel2)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 696, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 696, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addGap(12, 12, 12)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("vendeurs", jPanel4);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -644,6 +759,10 @@ public class FenetrePrincipale extends javax.swing.JFrame {
         tblVentes.setModel(afficher("locations"));
     }//GEN-LAST:event_l_btn_modifActionPerformed
 
+    private void table_vendeurMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_vendeurMouseClicked
+        table_biens.setModel(afficher("biens"));
+    }//GEN-LAST:event_table_vendeurMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -690,6 +809,7 @@ public class FenetrePrincipale extends javax.swing.JFrame {
     private javax.swing.JComboBox<Object> cmb_utilisateur;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
@@ -698,6 +818,7 @@ public class FenetrePrincipale extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
@@ -711,8 +832,11 @@ public class FenetrePrincipale extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton l_btn_ajout;
     private javax.swing.JButton l_btn_modif;
@@ -724,6 +848,8 @@ public class FenetrePrincipale extends javax.swing.JFrame {
     private javax.swing.JTextField l_surfTerrain;
     private javax.swing.JTextField l_surface;
     private javax.swing.JTextField l_type;
+    private javax.swing.JTable table_biens;
+    private javax.swing.JTable table_vendeur;
     private javax.swing.JTable tblLocations;
     private javax.swing.JTable tblVentes;
     private javax.swing.JButton v_btn_ajout;
